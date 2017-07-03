@@ -2,6 +2,9 @@
 
 Plugin for Remarkable md parser to extract variables from md files
 
+## Install
+npm i remarkable-variables --save
+
 ## Usage
 ```
 const Remarkable = require('remarkable');
