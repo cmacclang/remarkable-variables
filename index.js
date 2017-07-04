@@ -61,7 +61,6 @@ module.exports = function (md, options) {
       type: 'placeholder',
       content: state.src.slice(pos, max).trim(),
       lines: [startLine, state.line],
-      children: []
     });
 
     return true;

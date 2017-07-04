@@ -1,6 +1,6 @@
 {
   "name": "remarkable-variables",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Remarkable variables",
   "main": "index.js",
   "scripts": {
