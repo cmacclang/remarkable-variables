@@ -51,7 +51,7 @@ module.exports = function (md, options) {
 
     const REGEX = /^{{([^}{]*)}}$/;
 
-    if (!state.src.match(REGEX)) {
+    if (!state.src.slice(pos, max).match(REGEX)) {
       return false
     }
 

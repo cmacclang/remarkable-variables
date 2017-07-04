@@ -145,5 +145,22 @@ Test text
 
   });
 
+  it('header and placeholder', () => {
+
+    md.variables = [];
+
+    const text = `# Test
+
+{{world}}`;
+
+    const res = md.parse(text, {});
+
+    console.log(res)
+    console.log(md.variables)
+
+    assert.deepEqual(res[3].type, "placeholder");
+
+  });
+
 
 });
