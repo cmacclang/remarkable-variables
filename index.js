@@ -2,9 +2,9 @@
 
 module.exports = function (md, options) {
 
-  function parseBlock(state, startLine, endLine, silent) {
+  function parseVariableBlock(state, startLine, endLine, silent) {
 
-    var ch, level, tmp,
+    var ch, tmp,
       pos = state.bMarks[startLine] + state.tShift[startLine],
       max = state.eMarks[startLine];
 
@@ -12,18 +12,13 @@ module.exports = function (md, options) {
       return false;
     }
 
-    ch  = state.src.charCodeAt(pos);
+    ch = state.src.charCodeAt(pos);
 
     if (ch !== 0x24/* # */ || pos >= max) {
       return false;
     }
 
-    // count heading level
     ch = state.src.charCodeAt(++pos);
-    while (ch === 0x24/* # */ && pos < max && level <= 6) {
-      ch = state.src.charCodeAt(++pos);
-    }
-
     if (pos < max && ch !== 0x20/* space */) {
       return false;
     }
@@ -49,6 +44,32 @@ module.exports = function (md, options) {
 
   }
 
-  md.block.ruler.before('code', 'variable', parseBlock, options);
+  function parsePlaceholderBlock(state, startLine, endLine, silent) {
+
+    const pos = state.bMarks[startLine] + state.tShift[startLine];
+    const max = state.eMarks[startLine];
+
+    const REGEX = /^{{([^}{]*)}}$/;
+
+    if (!state.src.match(REGEX)) {
+      return false
+    }
+
+    state.line = startLine + 1;
+
+    state.tokens.push({
+      type: 'placeholder',
+      content: state.src.slice(pos, max).trim(),
+      lines: [startLine, state.line],
+      children: []
+    });
+
+    return true;
+
+  }
+
+
+  md.block.ruler.before('code', 'variable', parseVariableBlock, options);
+  md.block.ruler.before('code', 'placeholder', parsePlaceholderBlock, options);
 
 };

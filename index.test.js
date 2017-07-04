@@ -130,5 +130,20 @@ Test text
     assert.deepEqual(md.variables[2], 'today = \"today\"');
   });
 
+  it('placeholder', () => {
+
+    md.variables = [];
+
+    const text = `{{world}}`;
+
+    const res = md.parse(text, {});
+
+    console.log(res)
+    console.log(md.variables)
+
+    assert.deepEqual(res[0].type, "placeholder");
+
+  });
+
 
 });
