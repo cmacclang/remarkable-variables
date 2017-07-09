@@ -67,8 +67,32 @@ module.exports = function (md, options) {
 
   }
 
+  function parseCommentBlock(state, startLine, endLine, silent) {
+
+    const pos = state.bMarks[startLine] + state.tShift[startLine];
+    const max = state.eMarks[startLine];
+
+    const REGEX = /^\/\/\s(.*)$/;
+
+    if (!state.src.slice(pos, max).match(REGEX)) {
+      return false
+    }
+
+    state.line = startLine + 1;
+
+    // state.tokens.push({
+    //   type: 'comment',
+    //   content: state.src.slice(pos, max).trim(),
+    //   lines: [startLine, state.line],
+    // });
+
+    return true;
+
+  }
+
 
   md.block.ruler.before('code', 'variable', parseVariableBlock, options);
   md.block.ruler.before('code', 'placeholder', parsePlaceholderBlock, options);
+  md.block.ruler.before('code', 'commend', parseCommentBlock, options);
 
 };
