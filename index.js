@@ -60,9 +60,39 @@ module.exports = function (md, options) {
     state.tokens.push({
       type: 'placeholder',
       content: state.src.slice(pos, max).trim(),
+      variable: state.src.slice(pos, max).trim().replace(REGEX, '$1'),
       lines: [startLine, state.line],
     });
 
+    return true;
+
+  }
+
+  function parsePlaceholderInline(state, silent) {
+
+    const pos = state.pos;
+    const max = state.posMax;
+
+    const REGEX = /{{([^}{]*)}}/g;
+
+    if (!state.src.slice(pos, max).match(REGEX)) {
+      return false
+    }
+
+    var res;
+    while (res = REGEX.exec(state.src.slice(pos, max))) {
+      if (!silent) {
+        state.push({
+          type: 'placeholder',
+          level: state.level,
+          content: res[0],
+          variable: res[1],
+      });
+      }
+    }
+
+    state.pos = state.posMax + 1;
+    state.posMax = max;
     return true;
 
   }
@@ -92,7 +122,10 @@ module.exports = function (md, options) {
 
 
   md.block.ruler.before('code', 'variable', parseVariableBlock, options);
-  md.block.ruler.before('code', 'placeholder', parsePlaceholderBlock, options);
   md.block.ruler.before('code', 'commend', parseCommentBlock, options);
+
+  md.block.ruler.before('code', 'placeholder', parsePlaceholderBlock, options);
+  md.inline.ruler.push('placeholder', parsePlaceholderInline, options);
+
 
 };
