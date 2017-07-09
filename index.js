@@ -73,25 +73,26 @@ module.exports = function (md, options) {
     const pos = state.pos;
     const max = state.posMax;
 
-    const REGEX = /{{([^}{]*)}}/g;
+    const REGEX = /^{{([^}{]*)}}/;
 
-    if (!state.src.slice(pos, max).match(REGEX)) {
+    const match = state.src.slice(pos, max).match(REGEX)
+
+    if (!match) {
       return false
     }
 
-    var res;
-    while (res = REGEX.exec(state.src.slice(pos, max))) {
-      if (!silent) {
-        state.push({
-          type: 'placeholder',
-          level: state.level,
-          content: res[0],
-          variable: res[1],
+
+    if (!silent) {
+      state.push({
+        type: 'placeholder',
+        level: state.level,
+        content: match[0],
+        variable: match[1],
       });
-      }
+
     }
 
-    state.pos = state.posMax + 1;
+    state.pos = pos + match.index + match[0].length;
     state.posMax = max;
     return true;
 
@@ -118,7 +119,7 @@ module.exports = function (md, options) {
 
     return true;
 
-  }
+  };
 
 
   md.block.ruler.before('code', 'variable', parseVariableBlock, options);

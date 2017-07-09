@@ -53,7 +53,7 @@ describe('remarkable-variables', () => {
 
   });
 
-  it('inline and placeholder', () => {
+  it('inline and text placeholder ', () => {
 
     const text = `# Test {{world}}`;
     const res = md.parse(text, {});
@@ -77,7 +77,7 @@ describe('remarkable-variables', () => {
 
   });
 
-  it('inline and placeholder', () => {
+  it('inline and text placeholder placeholder', () => {
 
     const text = `# Test {{hello}} {{world}}`;
     const res = md.parse(text, {});
@@ -88,7 +88,7 @@ describe('remarkable-variables', () => {
     assert.equal(res.length, 3);
 
     assert.equal(res[0].type, 'heading_open');
-    assert.equal(res[1].children.length, 3);
+    assert.equal(res[1].children.length, 4);
 
     assert.equal(res[1].type, 'inline');
     assert.equal(res[1].children[0].type, 'text');
@@ -96,6 +96,36 @@ describe('remarkable-variables', () => {
     assert.equal(res[1].children[1].type, 'placeholder');
     assert.equal(res[1].children[1].content, '{{hello}}');
     assert.equal(res[1].children[1].variable, 'hello');
+    assert.equal(res[1].children[2].type, 'text');
+    assert.equal(res[1].children[2].content, ' ');
+    assert.equal(res[1].children[3].type, 'placeholder');
+    assert.equal(res[1].children[3].content, '{{world}}');
+    assert.equal(res[1].children[3].variable, 'world');
+
+    assert.equal(res[2].type, 'heading_close');
+
+  });
+
+  it('inline and placeholder text placeholder', () => {
+
+    const text = `# {{hello}} Test {{world}}`;
+    const res = md.parse(text, {});
+
+    console.log(res)
+    console.log(res[1].children)
+    console.log(md.variables)
+
+    assert.equal(res.length, 3);
+
+    assert.equal(res[0].type, 'heading_open');
+    assert.equal(res[1].children.length, 3);
+
+    assert.equal(res[1].type, 'inline');
+    assert.equal(res[1].children[0].type, 'placeholder');
+    assert.equal(res[1].children[0].content, '{{hello}}');
+    assert.equal(res[1].children[0].variable, 'hello');
+    assert.equal(res[1].children[1].type, 'text');
+    assert.equal(res[1].children[1].content, ' Test ');
     assert.equal(res[1].children[2].type, 'placeholder');
     assert.equal(res[1].children[2].content, '{{world}}');
     assert.equal(res[1].children[2].variable, 'world');
