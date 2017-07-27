@@ -130,7 +130,7 @@ Test text
     assert.deepEqual(md.variables[2], 'today = \"today\"');
   });
 
-  it('placeholder', () => {
+  it('placeholder_block', () => {
 
     md.variables = [];
 
@@ -141,11 +141,11 @@ Test text
     console.log(res)
     console.log(md.variables)
 
-    assert.deepEqual(res[0].type, "placeholder");
+    assert.deepEqual(res[0].type, "placeholder_block");
 
   });
 
-  it('header and placeholder', () => {
+  it('header and placeholder_block', () => {
 
     md.variables = [];
 
@@ -158,7 +158,7 @@ Test text
     console.log(res)
     console.log(md.variables)
 
-    assert.deepEqual(res[3].type, "placeholder");
+    assert.deepEqual(res[3].type, "placeholder_block");
 
   });
 

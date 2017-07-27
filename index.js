@@ -58,7 +58,7 @@ module.exports = function (md, options) {
     state.line = startLine + 1;
 
     state.tokens.push({
-      type: 'placeholder',
+      type: 'placeholder_block',
       content: state.src.slice(pos, max).trim(),
       variable: state.src.slice(pos, max).trim().replace(REGEX, '$1'),
       lines: [startLine, state.line],
@@ -84,10 +84,11 @@ module.exports = function (md, options) {
 
     if (!silent) {
       state.push({
-        type: 'placeholder',
+        type: 'placeholder_inline',
         level: state.level,
         content: match[0],
         variable: match[1],
+
       });
 
     }
@@ -125,8 +126,8 @@ module.exports = function (md, options) {
   md.block.ruler.before('code', 'variable', parseVariableBlock, options);
   md.block.ruler.before('code', 'commend', parseCommentBlock, options);
 
-  md.block.ruler.before('code', 'placeholder', parsePlaceholderBlock, options);
-  md.inline.ruler.push('placeholder', parsePlaceholderInline, options);
+  md.block.ruler.before('code', 'placeholder_block', parsePlaceholderBlock, options);
+  md.inline.ruler.push('placeholder_inline', parsePlaceholderInline, options);
 
 
 };
